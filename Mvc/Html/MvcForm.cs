@@ -10,8 +10,6 @@
  *
  * ***************************************************************************/
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace System.Web.Mvc.Html
 {
 	public class MvcForm : IDisposable
