@@ -10,39 +10,34 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Web.Mvc.Resources;
+using System.Web.Mvc.Resources;
 
-    // represents a result that performs a redirection given some URI
-    public class RedirectResult : ActionResult {
+namespace System.Web.Mvc
+{
+	// represents a result that performs a redirection given some URI
+	public class RedirectResult : ActionResult
+	{
+		public RedirectResult(string url)
+		{
+			if (String.IsNullOrEmpty(url))
+			{
+				throw new ArgumentException(MvcResources.Common_NullOrEmpty, "url");
+			}
 
-        [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#",
-            Justification = "Response.Redirect() takes its URI as a string parameter.")]
-        public RedirectResult(string url) {
-            if (String.IsNullOrEmpty(url)) {
-                throw new ArgumentException(MvcResources.Common_NullOrEmpty, "url");
-            }
+			Url = url;
+		}
 
-            Url = url;
-        }
+		public string Url { get; private set; }
 
-        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings",
-            Justification = "Response.Redirect() takes its URI as a string parameter.")]
-        public string Url {
-            get;
-            private set;
-        }
+		public override void ExecuteResult(ControllerContext context)
+		{
+			if (context == null)
+			{
+				throw new ArgumentNullException("context");
+			}
 
-        public override void ExecuteResult(ControllerContext context) {
-            if (context == null) {
-                throw new ArgumentNullException("context");
-            }
-
-            string destinationUrl = UrlHelper.Content(Url, context.HttpContext);
-            context.HttpContext.Response.Redirect(destinationUrl, false /* endResponse */);
-        }
-
-    }
+			var destinationUrl = UrlHelper.Content(Url, context.HttpContext);
+			context.HttpContext.Response.Redirect(destinationUrl, false /* endResponse */);
+		}
+	}
 }

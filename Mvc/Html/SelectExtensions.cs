@@ -58,16 +58,12 @@ namespace System.Web.Mvc.Html
 			return DropDownList(htmlHelper, name, selectList, new RouteValueDictionary(htmlAttributes));
 		}
 
-		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-			Justification = "This type is appropriate for indicating a single selection.")]
 		public static string DropDownList(this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> selectList,
 		                                  IDictionary<string, object> htmlAttributes)
 		{
 			return SelectInternal(htmlHelper, null /* optionLabel */, name, selectList, false /* allowMultiple */, htmlAttributes);
 		}
 
-		[SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-			Justification = "This type is appropriate for indicating a single selection.")]
 		public static string DropDownList(this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> selectList,
 		                                  string optionLabel, IDictionary<string, object> htmlAttributes)
 		{

@@ -10,100 +10,105 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Web.Mvc.Resources;
+using System.Globalization;
+using System.IO;
+using System.Web.Mvc.Resources;
 
-    public class WebFormView : IView {
+namespace System.Web.Mvc
+{
+	public class WebFormView : IView
+	{
+		IBuildManager _buildManager;
 
-        private IBuildManager _buildManager;
+		public WebFormView(string viewPath)
+			: this(viewPath, null) {}
 
-        public WebFormView(string viewPath)
-            : this(viewPath, null) {
-        }
+		public WebFormView(string viewPath, string masterPath)
+		{
+			if (String.IsNullOrEmpty(viewPath))
+			{
+				throw new ArgumentException(MvcResources.Common_NullOrEmpty, "viewPath");
+			}
 
-        public WebFormView(string viewPath, string masterPath) {
-            if (String.IsNullOrEmpty(viewPath)) {
-                throw new ArgumentException(MvcResources.Common_NullOrEmpty, "viewPath");
-            }
+			ViewPath = viewPath;
+			MasterPath = masterPath ?? String.Empty;
+		}
 
-            ViewPath = viewPath;
-            MasterPath = masterPath ?? String.Empty;
-        }
+		internal IBuildManager BuildManager
+		{
+			get
+			{
+				if (_buildManager == null)
+				{
+					_buildManager = new BuildManagerWrapper();
+				}
+				return _buildManager;
+			}
+			set { _buildManager = value; }
+		}
 
-        internal IBuildManager BuildManager {
-            get {
-                if (_buildManager == null) {
-                    _buildManager = new BuildManagerWrapper();
-                }
-                return _buildManager;
-            }
-            set {
-                _buildManager = value;
-            }
-        }
+		public string MasterPath { get; private set; }
 
-        public string MasterPath {
-            get;
-            private set;
-        }
+		public string ViewPath { get; private set; }
 
-        public string ViewPath {
-            get;
-            private set;
-        }
+		public virtual void Render(ViewContext viewContext, TextWriter writer)
+		{
+			if (viewContext == null)
+			{
+				throw new ArgumentNullException("viewContext");
+			}
 
-        public virtual void Render(ViewContext viewContext, TextWriter writer) {
-            if (viewContext == null) {
-                throw new ArgumentNullException("viewContext");
-            }
+			var viewInstance = BuildManager.CreateInstanceFromVirtualPath(ViewPath, typeof(object));
+			if (viewInstance == null)
+			{
+				throw new InvalidOperationException(
+					String.Format(
+						CultureInfo.CurrentUICulture,
+						MvcResources.WebFormViewEngine_ViewCouldNotBeCreated,
+						ViewPath));
+			}
 
-            object viewInstance = BuildManager.CreateInstanceFromVirtualPath(ViewPath, typeof(object));
-            if (viewInstance == null) {
-                throw new InvalidOperationException(
-                    String.Format(
-                        CultureInfo.CurrentUICulture,
-                        MvcResources.WebFormViewEngine_ViewCouldNotBeCreated,
-                        ViewPath));
-            }
+			var viewPage = viewInstance as ViewPage;
+			if (viewPage != null)
+			{
+				RenderViewPage(viewContext, viewPage);
+				return;
+			}
 
-            ViewPage viewPage = viewInstance as ViewPage;
-            if (viewPage != null) {
-                RenderViewPage(viewContext, viewPage);
-                return;
-            }
+			var viewUserControl = viewInstance as ViewUserControl;
+			if (viewUserControl != null)
+			{
+				RenderViewUserControl(viewContext, viewUserControl);
+				return;
+			}
 
-            ViewUserControl viewUserControl = viewInstance as ViewUserControl;
-            if (viewUserControl != null) {
-                RenderViewUserControl(viewContext, viewUserControl);
-                return;
-            }
+			throw new InvalidOperationException(
+				String.Format(
+					CultureInfo.CurrentUICulture,
+					MvcResources.WebFormViewEngine_WrongViewBase,
+					ViewPath));
+		}
 
-            throw new InvalidOperationException(
-                String.Format(
-                    CultureInfo.CurrentUICulture,
-                    MvcResources.WebFormViewEngine_WrongViewBase,
-                    ViewPath));
-        }
+		void RenderViewPage(ViewContext context, ViewPage page)
+		{
+			if (!String.IsNullOrEmpty(MasterPath))
+			{
+				page.MasterLocation = MasterPath;
+			}
 
-        private void RenderViewPage(ViewContext context, ViewPage page) {
-            if (!String.IsNullOrEmpty(MasterPath)) {
-                page.MasterLocation = MasterPath;
-            }
+			page.ViewData = context.ViewData;
+			page.RenderView(context);
+		}
 
-            page.ViewData = context.ViewData;
-            page.RenderView(context);
-        }
+		void RenderViewUserControl(ViewContext context, ViewUserControl control)
+		{
+			if (!String.IsNullOrEmpty(MasterPath))
+			{
+				throw new InvalidOperationException(MvcResources.WebFormViewEngine_UserControlCannotHaveMaster);
+			}
 
-        private void RenderViewUserControl(ViewContext context, ViewUserControl control) {
-            if (!String.IsNullOrEmpty(MasterPath)) {
-                throw new InvalidOperationException(MvcResources.WebFormViewEngine_UserControlCannotHaveMaster);
-            }
-
-            control.ViewData = context.ViewData;
-            control.RenderView(context);
-        }
-    }
+			control.ViewData = context.ViewData;
+			control.RenderView(context);
+		}
+	}
 }

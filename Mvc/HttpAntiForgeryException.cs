@@ -10,28 +10,22 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Runtime.Serialization;
-    using System.Web;
+using System.Runtime.Serialization;
 
-    [Serializable]
-    public sealed class HttpAntiForgeryException : HttpException {
+namespace System.Web.Mvc
+{
+	[Serializable]
+	public sealed class HttpAntiForgeryException : HttpException
+	{
+		public HttpAntiForgeryException() {}
 
-        public HttpAntiForgeryException() {
-        }
+		HttpAntiForgeryException(SerializationInfo info, StreamingContext context)
+			: base(info, context) {}
 
-        private HttpAntiForgeryException(SerializationInfo info, StreamingContext context)
-            : base(info, context) {
-        }
+		public HttpAntiForgeryException(string message)
+			: base(message) {}
 
-        public HttpAntiForgeryException(string message)
-            : base(message) {
-        }
-
-        public HttpAntiForgeryException(string message, Exception innerException)
-            : base(message, innerException) {
-        }
-
-    }
+		public HttpAntiForgeryException(string message, Exception innerException)
+			: base(message, innerException) {}
+	}
 }

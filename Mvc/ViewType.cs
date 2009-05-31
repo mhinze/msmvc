@@ -10,23 +10,22 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System.ComponentModel;
-    using System.Web.UI;
+using System.ComponentModel;
+using System.Web.UI;
 
-    [ControlBuilder(typeof(ViewTypeControlBuilder))]
-    [NonVisualControl]
-    public class ViewType : Control {
-        private string _typeName;
+namespace System.Web.Mvc
+{
+	[ControlBuilder(typeof(ViewTypeControlBuilder))]
+	[NonVisualControl]
+	public class ViewType : Control
+	{
+		string _typeName;
 
-        [DefaultValue("")]
-        public string TypeName {
-            get {
-                return _typeName ?? String.Empty;
-            }
-            set {
-                _typeName = value;
-            }
-        }
-    }
+		[DefaultValue("")]
+		public string TypeName
+		{
+			get { return _typeName ?? String.Empty; }
+			set { _typeName = value; }
+		}
+	}
 }

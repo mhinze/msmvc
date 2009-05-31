@@ -10,78 +10,63 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 
-    public class ModelBindingContext {
+namespace System.Web.Mvc
+{
+	public class ModelBindingContext
+	{
+		static readonly Predicate<string> _defaultPropertyFilter = _ => true;
 
-        private static readonly Predicate<string> _defaultPropertyFilter = _ => true;
+		string _modelName;
+		ModelStateDictionary _modelState;
+		Predicate<string> _propertyFilter;
 
-        private string _modelName;
-        private ModelStateDictionary _modelState;
-        private Predicate<string> _propertyFilter;
+		public bool FallbackToEmptyPrefix { get; set; }
 
-        public bool FallbackToEmptyPrefix {
-            get;
-            set;
-        }
+		public object Model { get; set; }
 
-        public object Model {
-            get;
-            set;
-        }
+		public string ModelName
+		{
+			get
+			{
+				if (_modelName == null)
+				{
+					_modelName = String.Empty;
+				}
+				return _modelName;
+			}
+			set { _modelName = value; }
+		}
 
-        public string ModelName {
-            get {
-                if (_modelName == null) {
-                    _modelName = String.Empty;
-                }
-                return _modelName;
-            }
-            set {
-                _modelName = value;
-            }
-        }
+		public ModelStateDictionary ModelState
+		{
+			get
+			{
+				if (_modelState == null)
+				{
+					_modelState = new ModelStateDictionary();
+				}
+				return _modelState;
+			}
+			set { _modelState = value; }
+		}
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-            Justification = "The containing type is mutable.")]
-        public ModelStateDictionary ModelState {
-            get {
-                if (_modelState == null) {
-                    _modelState = new ModelStateDictionary();
-                }
-                return _modelState;
-            }
-            set {
-                _modelState = value;
-            }
-        }
+		public Type ModelType { get; set; }
 
-        public Type ModelType {
-            get;
-            set;
-        }
+		public Predicate<string> PropertyFilter
+		{
+			get
+			{
+				if (_propertyFilter == null)
+				{
+					_propertyFilter = _defaultPropertyFilter;
+				}
+				return _propertyFilter;
+			}
+			set { _propertyFilter = value; }
+		}
 
-        public Predicate<string> PropertyFilter {
-            get {
-                if (_propertyFilter == null) {
-                    _propertyFilter = _defaultPropertyFilter;
-                }
-                return _propertyFilter;
-            }
-            set {
-                _propertyFilter = value;
-            }
-        }
-
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-            Justification = "The containing type is mutable.")]
-        public IDictionary<string, ValueProviderResult> ValueProvider {
-            get;
-            set;
-        }
-
-    }
+		public IDictionary<string, ValueProviderResult> ValueProvider { get; set; }
+	}
 }

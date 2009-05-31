@@ -11,7 +11,6 @@
  * ***************************************************************************/
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Web.Mvc.Resources;
 
@@ -41,8 +40,6 @@ namespace System.Web.Mvc
 			get { return _namespaces; }
 		}
 
-		[SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-			Justification = "Calling method multiple times might return different objects.")]
 		public IControllerFactory GetControllerFactory()
 		{
 			var controllerFactoryInstance = _factoryThunk();

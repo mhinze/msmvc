@@ -11,7 +11,6 @@
  * ***************************************************************************/
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -26,8 +25,6 @@ namespace System.Web.Mvc
 		ModelBinderDictionary _binders;
 		ControllerDescriptorCache _instanceDescriptorCache;
 
-		[SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-			Justification = "Property is settable so that the dictionary can be provided for unit testing purposes.")]
 		protected internal ModelBinderDictionary Binders
 		{
 			get
@@ -385,8 +382,6 @@ namespace System.Web.Mvc
 			return context;
 		}
 
-		[SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "rawUrl",
-			Justification = "We only care about the property getter's side effects, not the returned value.")]
 		static void ValidateRequest(HttpRequestBase request)
 		{
 			// DevDiv 214040: Enable Request Validation by default for all controller requests

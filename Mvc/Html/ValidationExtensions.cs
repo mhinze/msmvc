@@ -70,15 +70,11 @@ namespace System.Web.Mvc.Html
 			return ValidationMessage(htmlHelper, modelName, new RouteValueDictionary(htmlAttributes));
 		}
 
-		[SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames",
-			Justification = "'validationMessage' refers to the message that will be rendered by the ValidationMessage helper.")]
 		public static string ValidationMessage(this HtmlHelper htmlHelper, string modelName, string validationMessage)
 		{
 			return ValidationMessage(htmlHelper, modelName, validationMessage, (object)null /* htmlAttributes */);
 		}
 
-		[SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames",
-			Justification = "'validationMessage' refers to the message that will be rendered by the ValidationMessage helper.")]
 		public static string ValidationMessage(this HtmlHelper htmlHelper, string modelName, string validationMessage,
 		                                       object htmlAttributes)
 		{
@@ -91,8 +87,6 @@ namespace System.Web.Mvc.Html
 			return ValidationMessage(htmlHelper, modelName, null /* validationMessage */, htmlAttributes);
 		}
 
-		[SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames",
-			Justification = "'validationMessage' refers to the message that will be rendered by the ValidationMessage helper.")]
 		public static string ValidationMessage(this HtmlHelper htmlHelper, string modelName, string validationMessage,
 		                                       IDictionary<string, object> htmlAttributes)
 		{

@@ -10,61 +10,58 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Net.Mime;
-    using System.Web;
-    using System.Web.Mvc.Resources;
+using System.Net.Mime;
+using System.Web.Mvc.Resources;
 
-    public abstract class FileResult : ActionResult {
+namespace System.Web.Mvc
+{
+	public abstract class FileResult : ActionResult
+	{
+		protected FileResult(string contentType)
+		{
+			if (String.IsNullOrEmpty(contentType))
+			{
+				throw new ArgumentException(MvcResources.Common_NullOrEmpty, "contentType");
+			}
 
-        protected FileResult(string contentType) {
-            if (String.IsNullOrEmpty(contentType)) {
-                throw new ArgumentException(MvcResources.Common_NullOrEmpty, "contentType");
-            }
+			ContentType = contentType;
+		}
 
-            ContentType = contentType;
-        }
+		string _fileDownloadName;
 
-        private string _fileDownloadName;
+		public string ContentType { get; private set; }
 
-        public string ContentType {
-            get;
-            private set;
-        }
+		public string FileDownloadName
+		{
+			get { return _fileDownloadName ?? String.Empty; }
+			set { _fileDownloadName = value; }
+		}
 
-        public string FileDownloadName {
-            get {
-                return _fileDownloadName ?? String.Empty;
-            }
-            set {
-                _fileDownloadName = value;
-            }
-        }
+		public override void ExecuteResult(ControllerContext context)
+		{
+			if (context == null)
+			{
+				throw new ArgumentNullException("context");
+			}
 
-        public override void ExecuteResult(ControllerContext context) {
-            if (context == null) {
-                throw new ArgumentNullException("context");
-            }
+			var response = context.HttpContext.Response;
+			response.ContentType = ContentType;
 
-            HttpResponseBase response = context.HttpContext.Response;
-            response.ContentType = ContentType;
+			if (!String.IsNullOrEmpty(FileDownloadName))
+			{
+				// From RFC 2183, Sec. 2.3:
+				// The sender may want to suggest a filename to be used if the entity is
+				// detached and stored in a separate file. If the receiving MUA writes
+				// the entity to a file, the suggested filename should be used as a
+				// basis for the actual filename, where possible.
+				var disposition = new ContentDisposition {FileName = FileDownloadName};
+				var headerValue = disposition.ToString();
+				context.HttpContext.Response.AddHeader("Content-Disposition", headerValue);
+			}
 
-            if (!String.IsNullOrEmpty(FileDownloadName)) {
-                // From RFC 2183, Sec. 2.3:
-                // The sender may want to suggest a filename to be used if the entity is
-                // detached and stored in a separate file. If the receiving MUA writes
-                // the entity to a file, the suggested filename should be used as a
-                // basis for the actual filename, where possible.
-                ContentDisposition disposition = new ContentDisposition() { FileName = FileDownloadName };
-                string headerValue = disposition.ToString();
-                context.HttpContext.Response.AddHeader("Content-Disposition", headerValue);
-            }
+			WriteFile(response);
+		}
 
-            WriteFile(response);
-        }
-
-        protected abstract void WriteFile(HttpResponseBase response);
-
-    }
+		protected abstract void WriteFile(HttpResponseBase response);
+	}
 }

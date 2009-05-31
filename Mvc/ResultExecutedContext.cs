@@ -10,48 +10,33 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
+namespace System.Web.Mvc
+{
+	public class ResultExecutedContext : ControllerContext
+	{
+		// parameterless constructor used for mocking
+		public ResultExecutedContext() {}
 
-    public class ResultExecutedContext : ControllerContext {
+		public ResultExecutedContext(ControllerContext controllerContext, ActionResult result, bool canceled,
+		                             Exception exception)
+			: base(controllerContext)
+		{
+			if (result == null)
+			{
+				throw new ArgumentNullException("result");
+			}
 
-        // parameterless constructor used for mocking
-        public ResultExecutedContext() {
-        }
+			Result = result;
+			Canceled = canceled;
+			Exception = exception;
+		}
 
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "The virtual property setters are only to support mocking frameworks, in which case this constructor shouldn't be called anyway.")]
-        public ResultExecutedContext(ControllerContext controllerContext, ActionResult result, bool canceled, Exception exception)
-            : base(controllerContext) {
-            if (result == null) {
-                throw new ArgumentNullException("result");
-            }
+		public virtual bool Canceled { get; set; }
 
-            Result = result;
-            Canceled = canceled;
-            Exception = exception;
-        }
+		public virtual Exception Exception { get; set; }
 
-        public virtual bool Canceled {
-            get;
-            set;
-        }
+		public bool ExceptionHandled { get; set; }
 
-        public virtual Exception Exception {
-            get;
-            set;
-        }
-
-        public bool ExceptionHandled {
-            get;
-            set;
-        }
-
-        public virtual ActionResult Result {
-            get;
-            set;
-        }
-
-    }
+		public virtual ActionResult Result { get; set; }
+	}
 }

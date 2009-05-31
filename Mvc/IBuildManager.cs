@@ -10,12 +10,14 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System.Collections;
+using System.Collections;
 
-    // REVIEW: Should we make this public?
-    internal interface IBuildManager {
-        object CreateInstanceFromVirtualPath(string virtualPath, Type requiredBaseType);
-        ICollection GetReferencedAssemblies();
-    }
+namespace System.Web.Mvc
+{
+	// REVIEW: Should we make this public?
+	internal interface IBuildManager
+	{
+		object CreateInstanceFromVirtualPath(string virtualPath, Type requiredBaseType);
+		ICollection GetReferencedAssemblies();
+	}
 }

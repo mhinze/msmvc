@@ -10,27 +10,26 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
+namespace System.Web.Mvc
+{
+	public class JavaScriptResult : ActionResult
+	{
+		public string Script { get; set; }
 
-    public class JavaScriptResult : ActionResult {
+		public override void ExecuteResult(ControllerContext context)
+		{
+			if (context == null)
+			{
+				throw new ArgumentNullException("context");
+			}
 
-        public string Script {
-            get;
-            set;
-        }
+			var response = context.HttpContext.Response;
+			response.ContentType = "application/x-javascript";
 
-        public override void ExecuteResult(ControllerContext context) {
-            if (context == null) {
-                throw new ArgumentNullException("context");
-            }
-
-            HttpResponseBase response = context.HttpContext.Response;
-            response.ContentType = "application/x-javascript";
-
-            if (Script != null) {
-                response.Write(Script);
-            }
-        }
-    }
+			if (Script != null)
+			{
+				response.Write(Script);
+			}
+		}
+	}
 }

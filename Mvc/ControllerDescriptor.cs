@@ -10,7 +10,6 @@
  *
  * ***************************************************************************/
 
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace System.Web.Mvc
@@ -37,13 +36,11 @@ namespace System.Web.Mvc
 
 		public abstract ActionDescriptor[] GetCanonicalActions();
 
-		[SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
 		public virtual object[] GetCustomAttributes(bool inherit)
 		{
 			return GetCustomAttributes(typeof(object), inherit);
 		}
 
-		[SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
 		public virtual object[] GetCustomAttributes(Type attributeType, bool inherit)
 		{
 			if (attributeType == null)
@@ -54,7 +51,6 @@ namespace System.Web.Mvc
 			return (object[])Array.CreateInstance(attributeType, 0);
 		}
 
-		[SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
 		public virtual bool IsDefined(Type attributeType, bool inherit)
 		{
 			if (attributeType == null)

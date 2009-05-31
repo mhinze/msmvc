@@ -10,12 +10,10 @@
  *
  * ***************************************************************************/
 
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace System.Web.Mvc
 {
-	[SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes", Justification = "Unsealed so that subclassed types can set properties in the default constructor or override our behavior.")]
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
 	public class AuthorizeAttribute : FilterAttribute, IAuthorizationFilter
 	{

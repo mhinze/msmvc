@@ -10,36 +10,26 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
+namespace System.Web.Mvc
+{
+	public class ResultExecutingContext : ControllerContext
+	{
+		// parameterless constructor used for mocking
+		public ResultExecutingContext() {}
 
-    public class ResultExecutingContext : ControllerContext {
+		public ResultExecutingContext(ControllerContext controllerContext, ActionResult result)
+			: base(controllerContext)
+		{
+			if (result == null)
+			{
+				throw new ArgumentNullException("result");
+			}
 
-        // parameterless constructor used for mocking
-        public ResultExecutingContext() {
-        }
+			Result = result;
+		}
 
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "The virtual property setters are only to support mocking frameworks, in which case this constructor shouldn't be called anyway.")]
-        public ResultExecutingContext(ControllerContext controllerContext, ActionResult result)
-            : base(controllerContext) {
-            if (result == null) {
-                throw new ArgumentNullException("result");
-            }
+		public bool Cancel { get; set; }
 
-            Result = result;
-        }
-
-        public bool Cancel {
-            get;
-            set;
-        }
-
-        public virtual ActionResult Result {
-            get;
-            set;
-        }
-
-    }
+		public virtual ActionResult Result { get; set; }
+	}
 }

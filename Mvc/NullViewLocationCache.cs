@@ -10,21 +10,15 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+namespace System.Web.Mvc
+{
+	internal sealed class NullViewLocationCache : IViewLocationCache
+	{
+		public string GetViewLocation(HttpContextBase httpContext, string key)
+		{
+			return null;
+		}
 
-    internal sealed class NullViewLocationCache : IViewLocationCache {
-
-        #region IViewLocationCache Members
-        public string GetViewLocation(HttpContextBase httpContext, string key) {
-            return null;
-        }
-
-        public void InsertViewLocation(HttpContextBase httpContext, string key, string virtualPath) {
-        }
-        #endregion
-    }
+		public void InsertViewLocation(HttpContextBase httpContext, string key, string virtualPath) {}
+	}
 }

@@ -11,7 +11,6 @@
  * ***************************************************************************/
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace System.Web.Mvc
@@ -26,13 +25,11 @@ namespace System.Web.Mvc
 
 		public abstract object Execute(ControllerContext controllerContext, IDictionary<string, object> parameters);
 
-		[SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
 		public virtual object[] GetCustomAttributes(bool inherit)
 		{
 			return GetCustomAttributes(typeof(object), inherit);
 		}
 
-		[SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
 		public virtual object[] GetCustomAttributes(Type attributeType, bool inherit)
 		{
 			if (attributeType == null)
@@ -43,8 +40,6 @@ namespace System.Web.Mvc
 			return (object[])Array.CreateInstance(attributeType, 0);
 		}
 
-		[SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-			Justification = "This method may perform non-trivial work.")]
 		public virtual FilterInfo GetFilters()
 		{
 			return new FilterInfo();
@@ -52,14 +47,11 @@ namespace System.Web.Mvc
 
 		public abstract ParameterDescriptor[] GetParameters();
 
-		[SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-			Justification = "This method may perform non-trivial work.")]
 		public virtual ICollection<ActionSelector> GetSelectors()
 		{
 			return _emptySelectors;
 		}
 
-		[SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
 		public virtual bool IsDefined(Type attributeType, bool inherit)
 		{
 			if (attributeType == null)

@@ -10,37 +10,32 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
+namespace System.Web.Mvc
+{
+	[Serializable]
+	public class ModelError
+	{
+		public ModelError(Exception exception)
+			: this(exception, null /* errorMessage */) {}
 
-    [Serializable]
-    public class ModelError {
+		public ModelError(Exception exception, string errorMessage)
+			: this(errorMessage)
+		{
+			if (exception == null)
+			{
+				throw new ArgumentNullException("exception");
+			}
 
-        public ModelError(Exception exception)
-            : this(exception, null /* errorMessage */) {
-        }
+			Exception = exception;
+		}
 
-        public ModelError(Exception exception, string errorMessage)
-            : this(errorMessage) {
-            if (exception == null) {
-                throw new ArgumentNullException("exception");
-            }
+		public ModelError(string errorMessage)
+		{
+			ErrorMessage = errorMessage ?? String.Empty;
+		}
 
-            Exception = exception;
-        }
+		public Exception Exception { get; private set; }
 
-        public ModelError(string errorMessage) {
-            ErrorMessage = errorMessage ?? String.Empty;
-        }
-
-        public Exception Exception {
-            get;
-            private set;
-        }
-
-        public string ErrorMessage {
-            get;
-            private set;
-        }
-    }
+		public string ErrorMessage { get; private set; }
+	}
 }

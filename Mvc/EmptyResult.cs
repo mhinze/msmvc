@@ -10,20 +10,18 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
+namespace System.Web.Mvc
+{
+	// represents a result that doesn't do anything, like a controller action returning null
+	public class EmptyResult : ActionResult
+	{
+		static readonly EmptyResult _singleton = new EmptyResult();
 
-    // represents a result that doesn't do anything, like a controller action returning null
-    public class EmptyResult : ActionResult {
+		internal static EmptyResult Instance
+		{
+			get { return _singleton; }
+		}
 
-        private static readonly EmptyResult _singleton = new EmptyResult();
-
-        internal static EmptyResult Instance {
-            get {
-                return _singleton;
-            }
-        }
-
-        public override void ExecuteResult(ControllerContext context) {
-        }
-    }
+		public override void ExecuteResult(ControllerContext context) {}
+	}
 }

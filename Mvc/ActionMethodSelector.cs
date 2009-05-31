@@ -123,7 +123,7 @@ namespace System.Web.Mvc
 				}
 				else
 				{
-					MethodInfo info = methodInfo;
+					var info = methodInfo;
 					if (attrs.All(attr => attr.IsValidForRequest(controllerContext, info)))
 					{
 						matchesWithSelectionAttributes.Add(methodInfo);

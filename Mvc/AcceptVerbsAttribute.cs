@@ -12,15 +12,12 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc.Resources;
 
 namespace System.Web.Mvc
 {
-	[SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments",
-		Justification = "The accessor is exposed as an ICollection<string>.")]
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
 	public sealed class AcceptVerbsAttribute : ActionMethodSelectorAttribute
 	{

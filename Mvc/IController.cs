@@ -10,10 +10,12 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System.Web.Routing;
+using System.Web.Routing;
 
-    public interface IController {
-        void Execute(RequestContext requestContext);
-    }
+namespace System.Web.Mvc
+{
+	public interface IController
+	{
+		void Execute(RequestContext requestContext);
+	}
 }

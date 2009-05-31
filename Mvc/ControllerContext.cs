@@ -10,7 +10,6 @@
  *
  * ***************************************************************************/
 
-using System.Diagnostics.CodeAnalysis;
 using System.Web.Routing;
 
 namespace System.Web.Mvc
@@ -32,10 +31,6 @@ namespace System.Web.Mvc
 
 		// copy constructor - allows for subclassed types to take an existing ControllerContext as a parameter
 		// and we'll automatically set the appropriate properties
-		[SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-			Justification =
-				"The virtual property setters are only to support mocking frameworks, in which case this constructor shouldn't be called anyway."
-			)]
 		protected ControllerContext(ControllerContext controllerContext)
 		{
 			if (controllerContext == null)
@@ -50,10 +45,6 @@ namespace System.Web.Mvc
 		public ControllerContext(HttpContextBase httpContext, RouteData routeData, ControllerBase controller)
 			: this(new RequestContext(httpContext, routeData), controller) {}
 
-		[SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-			Justification =
-				"The virtual property setters are only to support mocking frameworks, in which case this constructor shouldn't be called anyway."
-			)]
 		public ControllerContext(RequestContext requestContext, ControllerBase controller)
 		{
 			if (requestContext == null)

@@ -11,7 +11,6 @@
  * ***************************************************************************/
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Security.Principal;
@@ -42,8 +41,6 @@ namespace System.Web.Mvc
 			set { _actionInvoker = value; }
 		}
 
-		[SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-			Justification = "Property is settable so that the dictionary can be provided for unit testing purposes.")]
 		protected internal ModelBinderDictionary Binders
 		{
 			get
@@ -125,22 +122,16 @@ namespace System.Web.Mvc
 			get { return HttpContext == null ? null : HttpContext.User; }
 		}
 
-		[SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
-			Justification = "'Content' refers to ContentResult type; 'content' refers to ContentResult.Content property.")]
 		protected internal ContentResult Content(string content)
 		{
 			return Content(content, null /* contentType */);
 		}
 
-		[SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
-			Justification = "'Content' refers to ContentResult type; 'content' refers to ContentResult.Content property.")]
 		protected internal ContentResult Content(string content, string contentType)
 		{
 			return Content(content, contentType, null /* contentEncoding */);
 		}
 
-		[SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
-			Justification = "'Content' refers to ContentResult type; 'content' refers to ContentResult.Content property.")]
 		protected internal virtual ContentResult Content(string content, string contentType, Encoding contentEncoding)
 		{
 			return new ContentResult
@@ -155,7 +146,6 @@ namespace System.Web.Mvc
 		// the Dispose() method is not web-callable.  However, in general, since implicitly-
 		// implemented interface methods are public, they are web-callable unless decorated with
 		// [NonAction].
-		[SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
 		public void Dispose()
 		{
 			Dispose(true /* disposing */);
@@ -291,10 +281,6 @@ namespace System.Web.Mvc
 			};
 		}
 
-		[SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
-			Justification = "Instance method for consistency with other helpers.")]
-		[SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#",
-			Justification = "Response.Redirect() takes its URI as a string parameter.")]
 		protected internal virtual RedirectResult Redirect(string url)
 		{
 			if (String.IsNullOrEmpty(url))
@@ -567,15 +553,11 @@ namespace System.Web.Mvc
 			};
 		}
 
-		[SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
-			Justification = "The method name 'View' is a convenient shorthand for 'CreateViewResult'.")]
 		protected internal ViewResult View(IView view)
 		{
 			return View(view, null /* model */);
 		}
 
-		[SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
-			Justification = "The method name 'View' is a convenient shorthand for 'CreateViewResult'.")]
 		protected internal virtual ViewResult View(IView view, object model)
 		{
 			if (model != null)
@@ -591,8 +573,6 @@ namespace System.Web.Mvc
 			};
 		}
 
-		#region IActionFilter Members
-
 		void IActionFilter.OnActionExecuting(ActionExecutingContext filterContext)
 		{
 			OnActionExecuting(filterContext);
@@ -603,27 +583,15 @@ namespace System.Web.Mvc
 			OnActionExecuted(filterContext);
 		}
 
-		#endregion
-
-		#region IAuthorizationFilter Members
-
 		void IAuthorizationFilter.OnAuthorization(AuthorizationContext filterContext)
 		{
 			OnAuthorization(filterContext);
 		}
 
-		#endregion
-
-		#region IExceptionFilter Members
-
 		void IExceptionFilter.OnException(ExceptionContext filterContext)
 		{
 			OnException(filterContext);
 		}
-
-		#endregion
-
-		#region IResultFilter Members
 
 		void IResultFilter.OnResultExecuting(ResultExecutingContext filterContext)
 		{
@@ -634,7 +602,5 @@ namespace System.Web.Mvc
 		{
 			OnResultExecuted(filterContext);
 		}
-
-		#endregion
 	}
 }

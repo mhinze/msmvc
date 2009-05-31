@@ -10,47 +10,34 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
+namespace System.Web.Mvc
+{
+	public class ExceptionContext : ControllerContext
+	{
+		ActionResult _result;
 
-    public class ExceptionContext : ControllerContext {
+		// parameterless constructor used for mocking
+		public ExceptionContext() {}
 
-        private ActionResult _result;
+		public ExceptionContext(ControllerContext controllerContext, Exception exception)
+			: base(controllerContext)
+		{
+			if (exception == null)
+			{
+				throw new ArgumentNullException("exception");
+			}
 
-        // parameterless constructor used for mocking
-        public ExceptionContext() {
-        }
+			Exception = exception;
+		}
 
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "The virtual property setters are only to support mocking frameworks, in which case this constructor shouldn't be called anyway.")]
-        public ExceptionContext(ControllerContext controllerContext, Exception exception)
-            : base(controllerContext) {
-            if (exception == null) {
-                throw new ArgumentNullException("exception");
-            }
+		public virtual Exception Exception { get; set; }
 
-            Exception = exception;
-        }
+		public bool ExceptionHandled { get; set; }
 
-        public virtual Exception Exception {
-            get;
-            set;
-        }
-
-        public bool ExceptionHandled {
-            get;
-            set;
-        }
-
-        public ActionResult Result {
-            get {
-                return _result ?? EmptyResult.Instance;
-            }
-            set {
-                _result = value;
-            }
-        }
-
-    }
+		public ActionResult Result
+		{
+			get { return _result ?? EmptyResult.Instance; }
+			set { _result = value; }
+		}
+	}
 }

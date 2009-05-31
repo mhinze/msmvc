@@ -11,7 +11,6 @@
  * ***************************************************************************/
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Web.Routing;
 
 namespace System.Web.Mvc
@@ -25,8 +24,6 @@ namespace System.Web.Mvc
 
 		public ControllerContext ControllerContext { get; set; }
 
-		[SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-			Justification = "This property is settable so that unit tests can provide mock implementations.")]
 		public TempDataDictionary TempData
 		{
 			get
@@ -46,8 +43,6 @@ namespace System.Web.Mvc
 			set { _validateRequest = value; }
 		}
 
-		[SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-			Justification = "This property is settable so that unit tests can provide mock implementations.")]
 		public IDictionary<string, ValueProviderResult> ValueProvider
 		{
 			get
@@ -61,8 +56,6 @@ namespace System.Web.Mvc
 			set { _valueProvider = value; }
 		}
 
-		[SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-			Justification = "This property is settable so that unit tests can provide mock implementations.")]
 		public ViewDataDictionary ViewData
 		{
 			get
@@ -94,13 +87,9 @@ namespace System.Web.Mvc
 			ControllerContext = new ControllerContext(requestContext, this);
 		}
 
-		#region IController Members
-
 		void IController.Execute(RequestContext requestContext)
 		{
 			Execute(requestContext);
 		}
-
-		#endregion
 	}
 }

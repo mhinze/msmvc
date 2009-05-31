@@ -10,10 +10,12 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System.IO;
+using System.IO;
 
-    public interface IView {
-        void Render(ViewContext viewContext, TextWriter writer);
-    }
+namespace System.Web.Mvc
+{
+	public interface IView
+	{
+		void Render(ViewContext viewContext, TextWriter writer);
+	}
 }

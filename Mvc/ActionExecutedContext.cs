@@ -10,8 +10,6 @@
  *
  * ***************************************************************************/
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace System.Web.Mvc
 {
 	public class ActionExecutedContext : ControllerContext
@@ -21,7 +19,6 @@ namespace System.Web.Mvc
 		// parameterless constructor used for mocking
 		public ActionExecutedContext() {}
 
-		[SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "The virtual property setters are only to support mocking frameworks, in which case this constructor shouldn't be called anyway.")]
 		public ActionExecutedContext(ControllerContext controllerContext, ActionDescriptor actionDescriptor, bool canceled,
 		                             Exception exception)
 			: base(controllerContext)

@@ -99,8 +99,6 @@ namespace System.Web.Mvc.Ajax
 			set { _updateTargetId = value; }
 		}
 
-		[SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings",
-			Justification = "This property is used by the optionsBuilder which always accepts a string.")]
 		public string Url
 		{
 			get { return _url ?? String.Empty; }

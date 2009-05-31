@@ -28,7 +28,6 @@ namespace System.Web.Mvc.Html
 			_httpResponse = httpResponse;
 		}
 
-		[SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
 		public void Dispose()
 		{
 			Dispose(true /* disposing */);

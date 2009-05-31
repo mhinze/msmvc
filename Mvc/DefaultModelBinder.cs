@@ -13,7 +13,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -26,8 +25,6 @@ namespace System.Web.Mvc
 		ModelBinderDictionary _binders;
 		static string _resourceClassKey;
 
-		[SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-			Justification = "Property is settable so that the dictionary can be provided for unit testing purposes.")]
 		protected internal ModelBinderDictionary Binders
 		{
 			get
@@ -329,11 +326,6 @@ namespace System.Web.Mvc
 			return true;
 		}
 
-		[SuppressMessage("Microsoft.Globalization", "CA1304:SpecifyCultureInfo",
-			MessageId = "System.Web.Mvc.ValueProviderResult.ConvertTo(System.Type)",
-			Justification = "The target object should make the correct culture determination, not this method.")]
-		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-			Justification = "We're recording this exception so that we can act on it later.")]
 		static object ConvertProviderResult(ModelStateDictionary modelState, string modelStateKey,
 		                                    ValueProviderResult valueProviderResult, Type destinationType)
 		{
@@ -463,8 +455,6 @@ namespace System.Web.Mvc
 			                            propertyDescriptor.PropertyType, value);
 		}
 
-		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-			Justification = "We're recording this exception so that we can act on it later.")]
 		protected virtual void SetProperty(ControllerContext controllerContext, ModelBindingContext bindingContext,
 		                                   PropertyDescriptor propertyDescriptor, object value)
 		{

@@ -10,11 +10,13 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System.Web.Routing;
+using System.Web.Routing;
 
-    public interface IControllerFactory {
-        IController CreateController(RequestContext requestContext, string controllerName);
-        void ReleaseController(IController controller);
-    }
+namespace System.Web.Mvc
+{
+	public interface IControllerFactory
+	{
+		IController CreateController(RequestContext requestContext, string controllerName);
+		void ReleaseController(IController controller);
+	}
 }
