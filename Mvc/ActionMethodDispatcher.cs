@@ -10,77 +10,82 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
-    using System.Reflection;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
 
-    // The methods in this class don't perform error checking; that is the responsibility of the
-    // caller.
-    internal sealed class ActionMethodDispatcher {
+namespace System.Web.Mvc
+{
+	// The methods in this class don't perform error checking; that is the responsibility of the
+	// caller.
+	internal sealed class ActionMethodDispatcher
+	{
+		delegate object ActionExecutor(ControllerBase controller, object[] parameters);
 
-        private delegate object ActionExecutor(ControllerBase controller, object[] parameters);
-        private delegate void VoidActionExecutor(ControllerBase controller, object[] parameters);
+		delegate void VoidActionExecutor(ControllerBase controller, object[] parameters);
 
-        private ActionExecutor _executor;
+		readonly ActionExecutor _executor;
 
-        public ActionMethodDispatcher(MethodInfo methodInfo) {
-            _executor = GetExecutor(methodInfo);
-            MethodInfo = methodInfo;
-        }
+		public ActionMethodDispatcher(MethodInfo methodInfo)
+		{
+			_executor = GetExecutor(methodInfo);
+			MethodInfo = methodInfo;
+		}
 
-        public MethodInfo MethodInfo {
-            get;
-            private set;
-        }
+		public MethodInfo MethodInfo { get; private set; }
 
-        public object Execute(ControllerBase controller, object[] parameters) {
-            return _executor(controller, parameters);
-        }
+		public object Execute(ControllerBase controller, object[] parameters)
+		{
+			return _executor(controller, parameters);
+		}
 
-        private static ActionExecutor GetExecutor(MethodInfo methodInfo) {
-            // Parameters to executor
-            ParameterExpression controllerParameter = Expression.Parameter(typeof(ControllerBase), "controller");
-            ParameterExpression parametersParameter = Expression.Parameter(typeof(object[]), "parameters");
+		static ActionExecutor GetExecutor(MethodInfo methodInfo)
+		{
+			// Parameters to executor
+			var controllerParameter = Expression.Parameter(typeof(ControllerBase), "controller");
+			var parametersParameter = Expression.Parameter(typeof(object[]), "parameters");
 
-            // Build parameter list
-            List<Expression> parameters = new List<Expression>();
-            ParameterInfo[] paramInfos = methodInfo.GetParameters();
-            for (int i = 0; i < paramInfos.Length; i++) {
-                ParameterInfo paramInfo = paramInfos[i];
-                BinaryExpression valueObj = Expression.ArrayIndex(parametersParameter, Expression.Constant(i));
-                UnaryExpression valueCast = Expression.Convert(valueObj, paramInfo.ParameterType);
+			// Build parameter list
+			var parameters = new List<Expression>();
+			var paramInfos = methodInfo.GetParameters();
+			for (var i = 0; i < paramInfos.Length; i++)
+			{
+				var paramInfo = paramInfos[i];
+				var valueObj = Expression.ArrayIndex(parametersParameter, Expression.Constant(i));
+				var valueCast = Expression.Convert(valueObj, paramInfo.ParameterType);
 
-                // valueCast is "(Ti) parameters[i]"
-                parameters.Add(valueCast);
-            }
+				// valueCast is "(Ti) parameters[i]"
+				parameters.Add(valueCast);
+			}
 
-            // Call method
-            UnaryExpression instanceCast = (!methodInfo.IsStatic) ? Expression.Convert(controllerParameter, methodInfo.ReflectedType) : null;
-            MethodCallExpression methodCall = methodCall = Expression.Call(instanceCast, methodInfo, parameters);
+			// Call method
+			var instanceCast = (!methodInfo.IsStatic) ? Expression.Convert(controllerParameter, methodInfo.ReflectedType) : null;
+			var methodCall = Expression.Call(instanceCast, methodInfo, parameters);
 
-            // methodCall is "((TController) controller) method((T0) parameters[0], (T1) parameters[1], ...)"
-            // Create function
-            if (methodCall.Type == typeof(void)) {
-                Expression<VoidActionExecutor> lambda = Expression.Lambda<VoidActionExecutor>(methodCall, controllerParameter, parametersParameter);
-                VoidActionExecutor voidExecutor = lambda.Compile();
-                return WrapVoidAction(voidExecutor);
-            }
-            else {
-                // must coerce methodCall to match ActionExecutor signature
-                UnaryExpression castMethodCall = Expression.Convert(methodCall, typeof(object));
-                Expression<ActionExecutor> lambda = Expression.Lambda<ActionExecutor>(castMethodCall, controllerParameter, parametersParameter);
-                return lambda.Compile();
-            }
-        }
+			// methodCall is "((TController) controller) method((T0) parameters[0], (T1) parameters[1], ...)"
+			// Create function
+			if (methodCall.Type == typeof(void))
+			{
+				var lambda = Expression.Lambda<VoidActionExecutor>(methodCall, controllerParameter, parametersParameter);
+				var voidExecutor = lambda.Compile();
+				return WrapVoidAction(voidExecutor);
+			}
+			else
+			{
+				// must coerce methodCall to match ActionExecutor signature
+				var castMethodCall = Expression.Convert(methodCall, typeof(object));
+				var lambda = Expression.Lambda<ActionExecutor>(castMethodCall, controllerParameter, parametersParameter);
+				return lambda.Compile();
+			}
+		}
 
-        private static ActionExecutor WrapVoidAction(VoidActionExecutor executor) {
-            return delegate(ControllerBase controller, object[] parameters) {
-                executor(controller, parameters);
-                return null;
-            };
-        }
-
-    }
+		static ActionExecutor WrapVoidAction(VoidActionExecutor executor)
+		{
+			return delegate(ControllerBase controller, object[] parameters)
+			       {
+			       	executor(controller, parameters);
+			       	return null;
+			       };
+		}
+	}
 }

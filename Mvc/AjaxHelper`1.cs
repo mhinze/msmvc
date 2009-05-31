@@ -10,26 +10,26 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System.Web.Routing;
+using System.Web.Routing;
 
-    public class AjaxHelper<TModel> : AjaxHelper where TModel : class {
-        private ViewDataDictionary<TModel> _viewData;
+namespace System.Web.Mvc
+{
+	public class AjaxHelper<TModel> : AjaxHelper where TModel : class
+	{
+		readonly ViewDataDictionary<TModel> _viewData;
 
-        public AjaxHelper(ViewContext viewContext, IViewDataContainer viewDataContainer)
-            : this(viewContext, viewDataContainer, RouteTable.Routes) {
-        }
+		public AjaxHelper(ViewContext viewContext, IViewDataContainer viewDataContainer)
+			: this(viewContext, viewDataContainer, RouteTable.Routes) {}
 
-        public AjaxHelper(ViewContext viewContext, IViewDataContainer viewDataContainer, RouteCollection routeCollection)
-            : base(viewContext, viewDataContainer, routeCollection) {
+		public AjaxHelper(ViewContext viewContext, IViewDataContainer viewDataContainer, RouteCollection routeCollection)
+			: base(viewContext, viewDataContainer, routeCollection)
+		{
+			_viewData = new ViewDataDictionary<TModel>(viewDataContainer.ViewData);
+		}
 
-            _viewData = new ViewDataDictionary<TModel>(viewDataContainer.ViewData);
-        }
-
-        public new ViewDataDictionary<TModel> ViewData {
-            get {
-                return _viewData;
-            }
-        }
-    }
+		public new ViewDataDictionary<TModel> ViewData
+		{
+			get { return _viewData; }
+		}
+	}
 }

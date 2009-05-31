@@ -10,47 +10,48 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.IO;
-    using System.Web;
+using System.IO;
 
-    public class FileStreamResult : FileResult {
+namespace System.Web.Mvc
+{
+	public class FileStreamResult : FileResult
+	{
+		// default buffer size as defined in BufferedStream type
+		const int _bufferSize = 0x1000;
 
-        // default buffer size as defined in BufferedStream type
-        private const int _bufferSize = 0x1000;
+		public FileStreamResult(Stream fileStream, string contentType)
+			: base(contentType)
+		{
+			if (fileStream == null)
+			{
+				throw new ArgumentNullException("fileStream");
+			}
 
-        public FileStreamResult(Stream fileStream, string contentType)
-            : base(contentType) {
-            if (fileStream == null) {
-                throw new ArgumentNullException("fileStream");
-            }
+			FileStream = fileStream;
+		}
 
-            FileStream = fileStream;
-        }
+		public Stream FileStream { get; private set; }
 
-        public Stream FileStream {
-            get;
-            private set;
-        }
+		protected override void WriteFile(HttpResponseBase response)
+		{
+			// grab chunks of data and write to the output stream
+			var outputStream = response.OutputStream;
+			using (FileStream)
+			{
+				var buffer = new byte[_bufferSize];
 
-        protected override void WriteFile(HttpResponseBase response) {
-            // grab chunks of data and write to the output stream
-            Stream outputStream = response.OutputStream;
-            using (FileStream) {
-                byte[] buffer = new byte[_bufferSize];
+				while (true)
+				{
+					var bytesRead = FileStream.Read(buffer, 0, _bufferSize);
+					if (bytesRead == 0)
+					{
+						// no more data
+						break;
+					}
 
-                while (true) {
-                    int bytesRead = FileStream.Read(buffer, 0, _bufferSize);
-                    if (bytesRead == 0) {
-                        // no more data
-                        break;
-                    }
-
-                    outputStream.Write(buffer, 0, bytesRead);
-                }
-            }
-        }
-
-    }
+					outputStream.Write(buffer, 0, bytesRead);
+				}
+			}
+		}
+	}
 }

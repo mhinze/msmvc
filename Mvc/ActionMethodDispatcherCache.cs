@@ -10,18 +10,15 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Reflection;
+using System.Reflection;
 
-    internal sealed class ActionMethodDispatcherCache : ReaderWriterCache<MethodInfo,ActionMethodDispatcher> {
-
-        public ActionMethodDispatcherCache() {
-        }
-
-        public ActionMethodDispatcher GetDispatcher(MethodInfo methodInfo) {
-            return FetchOrCreateItem(methodInfo, () => new ActionMethodDispatcher(methodInfo));
-        }
-
-    }
+namespace System.Web.Mvc
+{
+	internal sealed class ActionMethodDispatcherCache : ReaderWriterCache<MethodInfo, ActionMethodDispatcher>
+	{
+		public ActionMethodDispatcher GetDispatcher(MethodInfo methodInfo)
+		{
+			return FetchOrCreateItem(methodInfo, () => new ActionMethodDispatcher(methodInfo));
+		}
+	}
 }

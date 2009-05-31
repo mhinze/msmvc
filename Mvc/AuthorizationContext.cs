@@ -10,22 +10,16 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
+namespace System.Web.Mvc
+{
+	public class AuthorizationContext : ControllerContext
+	{
+		// parameterless constructor used for mocking
+		public AuthorizationContext() {}
 
-    public class AuthorizationContext : ControllerContext {
+		public AuthorizationContext(ControllerContext controllerContext)
+			: base(controllerContext) {}
 
-        // parameterless constructor used for mocking
-        public AuthorizationContext() {
-        }
-
-        public AuthorizationContext(ControllerContext controllerContext)
-            : base(controllerContext) {
-        }
-
-        public ActionResult Result {
-            get;
-            set;
-        }
-
-    }
+		public ActionResult Result { get; set; }
+	}
 }

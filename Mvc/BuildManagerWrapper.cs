@@ -10,19 +10,21 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System.Collections;
-    using System.Web.Compilation;
+using System.Collections;
+using System.Web.Compilation;
 
-    internal sealed class BuildManagerWrapper : IBuildManager {
-        #region IBuildManager Members
-        object IBuildManager.CreateInstanceFromVirtualPath(string virtualPath, Type requiredBaseType) {
-            return BuildManager.CreateInstanceFromVirtualPath(virtualPath, requiredBaseType);
-        }
+namespace System.Web.Mvc
+{
+	internal sealed class BuildManagerWrapper : IBuildManager
+	{
+		object IBuildManager.CreateInstanceFromVirtualPath(string virtualPath, Type requiredBaseType)
+		{
+			return BuildManager.CreateInstanceFromVirtualPath(virtualPath, requiredBaseType);
+		}
 
-        ICollection IBuildManager.GetReferencedAssemblies() {
-            return BuildManager.GetReferencedAssemblies();
-        }
-        #endregion
-    }
+		ICollection IBuildManager.GetReferencedAssemblies()
+		{
+			return BuildManager.GetReferencedAssemblies();
+		}
+	}
 }

@@ -10,93 +10,91 @@
  *
  * ***************************************************************************/
 
-namespace System.Web.Mvc {
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
+using System.Security.Cryptography;
+using System.Text;
 
-    internal sealed class AntiForgeryData {
+namespace System.Web.Mvc
+{
+	internal sealed class AntiForgeryData
+	{
+		const string AntiForgeryTokenFieldName = "__RequestVerificationToken";
 
-        private const string AntiForgeryTokenFieldName = "__RequestVerificationToken";
+		const int TokenLength = 128/8;
+		static readonly RNGCryptoServiceProvider _prng = new RNGCryptoServiceProvider();
 
-        private const int TokenLength = 128 / 8;
-        private static RNGCryptoServiceProvider _prng = new RNGCryptoServiceProvider();
+		string _salt;
+		string _value;
 
-        private string _salt;
-        private string _value;
+		public AntiForgeryData() {}
 
-        public AntiForgeryData() {
-        }
+		// copy constructor
+		public AntiForgeryData(AntiForgeryData token)
+		{
+			if (token == null)
+			{
+				throw new ArgumentNullException("token");
+			}
 
-        // copy constructor
-        public AntiForgeryData(AntiForgeryData token) {
-            if (token == null) {
-                throw new ArgumentNullException("token");
-            }
+			CreationDate = token.CreationDate;
+			Salt = token.Salt;
+			Value = token.Value;
+		}
 
-            CreationDate = token.CreationDate;
-            Salt = token.Salt;
-            Value = token.Value;
-        }
+		public DateTime CreationDate { get; set; }
 
-        public DateTime CreationDate {
-            get;
-            set;
-        }
+		public string Salt
+		{
+			get { return _salt ?? String.Empty; }
+			set { _salt = value; }
+		}
 
-        public string Salt {
-            get {
-                return _salt ?? String.Empty;
-            }
-            set {
-                _salt = value;
-            }
-        }
+		public string Value
+		{
+			get { return _value ?? String.Empty; }
+			set { _value = value; }
+		}
 
-        public string Value {
-            get {
-                return _value ?? String.Empty;
-            }
-            set {
-                _value = value;
-            }
-        }
+		static string Base64EncodeForCookieName(string s)
+		{
+			var rawBytes = Encoding.UTF8.GetBytes(s);
+			var base64String = Convert.ToBase64String(rawBytes);
 
-        private static string Base64EncodeForCookieName(string s) {
-            byte[] rawBytes = Encoding.UTF8.GetBytes(s);
-            string base64String = Convert.ToBase64String(rawBytes);
+			// replace base64-specific characters with characters that are safe for a cookie name
+			return base64String.Replace('+', '.').Replace('/', '-').Replace('=', '_');
+		}
 
-            // replace base64-specific characters with characters that are safe for a cookie name
-            return base64String.Replace('+', '.').Replace('/', '-').Replace('=', '_');
-        }
+		static string GenerateRandomTokenString()
+		{
+			var tokenBytes = new byte[TokenLength];
+			_prng.GetBytes(tokenBytes);
 
-        private static string GenerateRandomTokenString() {
-            byte[] tokenBytes = new byte[TokenLength];
-            _prng.GetBytes(tokenBytes);
+			var token = Convert.ToBase64String(tokenBytes);
+			return token;
+		}
 
-            string token = Convert.ToBase64String(tokenBytes);
-            return token;
-        }
+		// If the app path is provided, we're generating a cookie name rather than a field name, and the cookie names should
+		// be unique so that a development server cookie and an IIS cookie - both running on localhost - don't stomp on
+		// each other.
+		internal static string GetAntiForgeryTokenName(string appPath)
+		{
+			if (String.IsNullOrEmpty(appPath))
+			{
+				return AntiForgeryTokenFieldName;
+			}
+			else
+			{
+				return AntiForgeryTokenFieldName + "_" + Base64EncodeForCookieName(appPath);
+			}
+		}
 
-        // If the app path is provided, we're generating a cookie name rather than a field name, and the cookie names should
-        // be unique so that a development server cookie and an IIS cookie - both running on localhost - don't stomp on
-        // each other.
-        internal static string GetAntiForgeryTokenName(string appPath) {
-            if (String.IsNullOrEmpty(appPath)) {
-                return AntiForgeryTokenFieldName;
-            }
-            else {
-                return AntiForgeryTokenFieldName + "_" + Base64EncodeForCookieName(appPath);
-            }
-        }
-
-        public static AntiForgeryData NewToken() {
-            string tokenString = GenerateRandomTokenString();
-            return new AntiForgeryData() {
-                CreationDate = DateTime.Now,
-                Value = tokenString
-            };
-        }
-
-    }
+		public static AntiForgeryData NewToken()
+		{
+			var tokenString = GenerateRandomTokenString();
+			return new AntiForgeryData
+			{
+				CreationDate = DateTime.Now,
+				Value = tokenString
+			};
+		}
+	}
 }
